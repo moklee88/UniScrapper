@@ -4,23 +4,22 @@ import time
 from pathlib import Path
 from selenium import webdriver
 import bs4 as bs4
-from bs4 import Comment
 import requests
 import os
 import copy
+import tools
 
 url = "https://future-students.uq.edu.au/study/programs/bachelor-advanced-business-honours-2139"
 
 option = webdriver.ChromeOptions()
 exec_path = Path(os.getcwd().replace('\\', '/'))
-exec_path = exec_path.parent.parent.__str__() + '/Libraries/Google/v86/chromedriver.exe'
-driver = webdriver.Chrome(executable_path=exec_path, options=option)
+chrome_path = exec_path.parent.parent.parent.__str__() + '/Libraries/Google/v86/chromedriver.exe'
+driver = webdriver.Chrome(executable_path=chrome_path, options=option)
 
-"""
-course_links_file_path = Path(os.getcwd().replace('\\', '/'))
-course_links_file_path = course_links_file_path.__str__() + '/ucq_bachelor_links_file'
-course_links_file = open(course_links_file_path, 'r')
-"""
+# read the url from each file into a list
+course_links_file_path = exec_path.__str__() + '/links_file.txt'
+
+all_url = open(course_links_file_path, 'r')
 
 driver.get(url)
 pure_url = url.strip()
