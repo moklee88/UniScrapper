@@ -39,7 +39,7 @@ level_key = {'VOC': ['Vocational'],
 
 
 def cleaner(dirty_word):
-    for ch in [' ', '$', ',']:
+    for ch in [' ', '$', ',', 'A']:
         if ch in dirty_word:
             dirty_word = dirty_word.replace(ch, '')
     clean_word = dirty_word.strip()

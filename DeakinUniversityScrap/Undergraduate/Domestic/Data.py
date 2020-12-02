@@ -234,6 +234,7 @@ desired_order_list = ['Level_Code',
                       'Remarks',
                       'Course_Delivery_Mode',
                       'Free TAFE']
+
 # the csv file we'll be saving the courses to
 csv_file_path = Path(os.getcwd().replace('\\', '/'))
 csv_file = csv_file_path.__str__() + '/Deakin_NoFees.csv'
