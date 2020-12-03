@@ -24,10 +24,10 @@ course_links_file_path = exec_path.__str__() + '/links_file.txt'
 all_url = open(course_links_file_path, 'r')
 level_key = tools.level_key
 
-possible_cities = {'St Lucia', 'Gatton', 'Herston','Pharmacy Aust Cntr Excellence'}
+possible_cities = {'St Lucia', 'Gatton', 'Herston', 'Pharmacy Aust Cntr Excellence'}
 
-prerequisite_subjects = {'General English subject': ['C'],
-                         'Mathematical Methods or Specialist Mathematics': ['C'],
+prerequisite_subjects = {'General English subject': ['Units 3 & 4, C'],
+                         'Mathematical Methods or Specialist Mathematics': ['Units 3 & 4, C'],
                          ' UCAT (domestic* only)': [],
                          'IELTS': ['7', '6.5']}
 
@@ -104,6 +104,16 @@ else:
 # Find Description
 description = soup.find('div', {'class', 'page__sections'}).find('div', {'class', 'collapsible'}).text
 print(description)
+
+# Find career outcomes
+career_tag = []
+sections = soup.find_all('section',
+                         {'class', 'section section--narrow-floated section--mobile-accordion accordion processed'})
+for section in sections:
+    if "Career possibilities" in section:
+        career_tag = section.find('article')
+
+course_data['Career_Outcomes'] = career_tag.text
 
 # Find Subject
 subject_url = each_url + "#entry-requirements"
