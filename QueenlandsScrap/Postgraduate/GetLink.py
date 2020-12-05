@@ -12,8 +12,7 @@ from selenium.common.exceptions import TimeoutException, NoSuchElementException,
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 
-url = 'https://future-students.uq.edu.au/study/programs?level[Undergraduate]=Undergraduate&year=2021'
-# url = 'https://my.uq.edu.au/programs-courses/browse.html?level=ugpg'
+url = 'https://future-students.uq.edu.au/study/programs?level[Postgraduate]=Postgraduate&year=2021'
 
 option = webdriver.ChromeOptions()
 # option.add_argument(" - incognito")

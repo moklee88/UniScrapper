@@ -21,11 +21,11 @@ driver = webdriver.Chrome(executable_path=chrome_path, options=option)
 # read the url from each file into a list
 course_links_file_path = exec_path.__str__() + '/links_file.txt'
 
-# all_url = ["https://future-students.uq.edu.au/study/programs/diploma-arts-2320", "https://future-students.uq.edu.au/study/programs/bachelors-arts-education-secondary-2066"]
+# all_url = [""]
 all_url = open(course_links_file_path, 'r')
 level_key = tools.level_key
 
-possible_cities = {'St Lucia', 'Gatton', 'Herston', 'Pharmacy Aust Cntr Excellence'}
+possible_cities = {'St Lucia', 'Gatton', 'Herston', 'Pharmacy Aust Cntr Excellence', 'External', 'Brisbane City'}
 
 prerequisite_subjects = {'General English subject': ['Units 3 & 4, C'],
                          'Mathematical Methods or Specialist Mathematics': ['Units 3 & 4, C'],
@@ -34,7 +34,18 @@ prerequisite_subjects = {'General English subject': ['Units 3 & 4, C'],
                          ' UCAT (domestic* only)': [],
                          'IELTS': ['7', '6.5'],
                          "Bachelor's degree": [],
-                         'Bachelor of Environmental Science': ['4']}
+                         'Bachelor of Environmental Science': ['4'],
+                         'approved degree': [],
+                         'Bachelor degree': ['5', '4.50', '4.0', '4'],
+                         'degree in law leading to admission to legal practice': ['4'],
+                         'Graduate Diploma in Mental Health from this university': [],
+                         'bachelor honours degree': [],
+                         'postgraduate degree in economics': [],
+                         'GMAT': ['550'],
+                         'Graduate Certificate': [],
+                         'Graduate Diploma in Environmental Health Sciences from this university': [],
+                         'Graduate Certificate in Economic Studies': [],
+                         'Graduate Diploma in Economics': []}
 
 desired_order_list = ['Level_Code',
                       'University',
@@ -72,7 +83,7 @@ desired_order_list = ['Level_Code',
 
 # the csv file we'll be saving the courses to
 csv_file_path = Path(os.getcwd().replace('\\', '/'))
-csv_file = csv_file_path.__str__() + '/Queenlands_Complete.csv'
+csv_file = csv_file_path.__str__() + '/Queenlands_Postgraduate.csv'
 change_to_int = False
 with open(csv_file, 'a', encoding='utf-8', newline='') as output_file:
     dict_writer = csv.DictWriter(output_file, fieldnames=desired_order_list)
@@ -154,8 +165,13 @@ with open(csv_file, 'a', encoding='utf-8', newline='') as output_file:
 
         for i in possible_cities:
             if i in locations:
+                if "External" in i:
+                    course_data['Online'] = "Yes"
                 actual_cities.append(i)
 
+        if len(actual_cities) == 1 and "External" in actual_cities:
+            course_data['Offline'] = "No" \
+                                     ""
         # check duplicate city
         actual_cities = list(dict.fromkeys(actual_cities))
 
@@ -167,6 +183,8 @@ with open(csv_file, 'a', encoding='utf-8', newline='') as output_file:
         # Find full time, part time
         if "full-time" in duration_text:
             course_data['Full_Time'] = "Yes"
+        elif "only available as part-time study" in duration_text:
+            course_data['Part_Time'] = "Yes"
         else:
             course_data['Full_Time'] = 'Yes'
             course_data['Part_Time'] = 'Yes'
@@ -191,13 +209,17 @@ with open(csv_file, 'a', encoding='utf-8', newline='') as output_file:
         course_data['Career_Outcomes'] = career_tag
 
         # Find Subject
-        prerequisites_subject_tag = soup.find_all \
+        ielts_subject_tag = soup.find_all \
             ('section', {'class', 'section section--narrow-floated section--mobile-accordion accordion processed'})
+        prerequisite_subjects_tag = soup.find_all \
+            ('section', {'class', 'section section--narrow-floated spacing--bottom-m'})
         ielts = []
         subjects = []
-        for tag in prerequisites_subject_tag:
+        for tag in prerequisite_subjects_tag:
             if "Prerequisites" in tag.find('h3').text:
                 subjects = tag.find('article').text.strip().split(';')
+
+        for tag in ielts_subject_tag:
             if "English language requirements" in tag.find('h3').text:
                 ielts = tag.find('p').text
 
